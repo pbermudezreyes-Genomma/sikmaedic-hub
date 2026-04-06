@@ -1986,12 +1986,52 @@ function updateHeaderSwitcher() {
   saved.forEach(b => addBrandToSwitcher(b));
 }
 
+// ══════════════════════════════════════════
+// PRESET BRANDS — Auto-cargadas al inicio
+// ══════════════════════════════════════════
+const PRESET_BRANDS = [
+  {
+    name: "Lomecan",
+    cat: "Antifúngico ginecológico — infecciones cervicovaginales por hongos",
+    pain: "infección vaginal por hongos con ardor, comezón, flujo anormal, irritación y mal olor; se agrava durante menstruación, post-relación íntima, post-depilación y actividad física intensa",
+    products: [
+      "Lomecan UNO (Fluconazol 150mg · 1 cápsula oral · 1 sola toma · cualquier hora del día)",
+      "Lomecan Crema (Clotrimazol 2% · Tubo 20g + aplicador · 1 vez al día · 3 días)",
+      "Lomecan Esos Días (higiene íntima durante menstruación)",
+      "Lomecan Íntimo (fórmula libre de químicos · piel sensible)",
+      "Lomecan Piel Sensible (fórmula suave · sin irritación)"
+    ],
+    claim: "Alivia ardor y comezón desde el primer día · Tu infección vaginal tiene los días contados · 1 sola toma",
+    ingredient: "Fluconazol 150mg + Clotrimazol 2%",
+    competitors: ["Canesten V", "Monistat", "Diflucan"],
+    target: "Mujeres 16-35 años NSE C, con infección vaginal activa o recurrente en los últimos 12 meses; buscan alivio rápido, sensibilidad y frescura; se preocupan por equilibrio de pH y flora vaginal",
+    occasions: ["infección vaginal activa — ardor y comezón", "periodo menstrual — higiene reforzada", "post-relación íntima", "post-depilación o rasurado", "gym y sudoración excesiva", "post-antibiótico — prevención recurrencia"],
+    color1: "#00B5C8",
+    color2: "#8B2FC9",
+    tone: "empatico",
+    market: "México"
+  }
+];
+
+function preloadPresetBrands() {
+  const saved = JSON.parse(localStorage.getItem('performanceBrands') || '[]');
+  let updated = false;
+  PRESET_BRANDS.forEach(preset => {
+    if (!saved.find(s => s.name === preset.name)) {
+      saved.push(preset);
+      updated = true;
+    }
+  });
+  if (updated) localStorage.setItem('performanceBrands', JSON.stringify(saved));
+}
+
 // Sync color pickers
 document.addEventListener('DOMContentLoaded', () => {
   const c1 = document.getElementById('b_color1');
   const c2 = document.getElementById('b_color2');
   if (c1) c1.addEventListener('input', () => { document.getElementById('b_color1_hex').value = c1.value; });
   if (c2) c2.addEventListener('input', () => { document.getElementById('b_color2_hex').value = c2.value; });
+  preloadPresetBrands();
   renderSavedBrands();
   updateHeaderSwitcher();
 });
