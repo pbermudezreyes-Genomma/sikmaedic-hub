@@ -295,6 +295,7 @@
   </div>
   <div class="brand-switcher" id="headerBrandSwitcher">
     <button class="brand-pill active" onclick="loadBrandPreset('silkamedic',this)">SilkaMedic</button>
+    <button class="brand-pill" onclick="loadBrandPreset('lomecan',this)" style="border-color:#00B5C8;color:#00B5C8">Lomecan</button>
     <button class="brand-pill" onclick="loadBrandPreset('tukol',this)">Tukol</button>
     <button class="brand-pill add-brand" onclick="showTab('multimarca');document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-btn')[5].classList.add('active')">+ Nueva Marca</button>
   </div>
@@ -948,7 +949,7 @@
 // ══════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════
-const KEYWORDS = [
+let KEYWORDS = [
   ["comprar silka medic gel","Gel","Transaccional","Exact","8,100","$18","Alta","1","95","ACTIVA","KW ancla de conversión. Bid agresivo."],
   ["silka medic gel precio","Gel","Transaccional","Exact","5,400","$14","Alta","1","90","ACTIVA","Incluir precio en anuncio. Extensión precio."],
   ["silka medic donde comprar","Todos","Transaccional","Exact","3,600","$12","Media","1","88","ACTIVA","Dirigir a Dónde Comprar + Amazon link."],
@@ -987,7 +988,7 @@ const KEYWORDS = [
   ["antifúngico antes de dormir","Gel","Informacional","Phrase","3,100","$7","Baja","2","74","ACTIVA","Ocasión nocturna. Copy: antes de dormir."]
 ];
 
-const PROMPTS = [
+let PROMPTS = [
   {producto:"GEL",tipo:"Hero Packshot",canal:["Amazon"],formato:"1:1 / 4:5",bg:"#3B0F6E",
    prompt:"Professional pharmaceutical product photography of SilkaMedic Gel 15g tube. Pure white seamless background. Deep purple (#3B0F6E) packaging with gold lettering. Studio lighting with soft box from top-left, subtle specular highlight on tube cap. Hyper-realistic 3D render quality. Shot at 45° angle showing full label. Macro detail on Terbinafina 1% text. Ultra-sharp focus, 4K resolution. No shadows except subtle ground shadow.",
    mood:"Farmacéutico premium / Clean",texto:"'Cura el Pie de Atleta en 7 días' | '1% Terbinafina'",notas:"Fondo blanco obligatorio Amazon. 85%+ producto en frame."},
@@ -1038,7 +1039,7 @@ const PROMPTS = [
    mood:"Confianza / Social Proof",texto:"5 estrellas | Quote testimonial | Ciudad",notas:"Sin fotos reales de personas. Solo avatar ilustrado."}
 ];
 
-const ADS_PLAN = [
+let ADS_PLAN = [
   {dia:"LUNES",diaColor:"#1A5276",funnel:"AWARENESS",canal:"YouTube",formato:"Pre-roll 15s no-skip + Bumper 6s",producto:"GEL",audiencia:"M/F 25-50 | NSE C-B | Salud, farmacia, bienestar",copy:"¿El pie de atleta te quita el sueño? SilkaMedic Gel lo elimina en 7 días. Una sola aplicación al día. #Rapidísísísísimo",cta:"Ver más / Comprar",kpi:"Views 60%+ | Brand Recall | VTR >35%",budget:"8%",ocasion:"Síntoma activo (awareness mañana)",keywords:"pie de atleta, hongos pies, salud, remedios"},
   {dia:"LUNES",diaColor:"#1A5276",funnel:"AWARENESS",canal:"Meta Ads",formato:"Reels 9:16 / 15s",producto:"SPRAY",audiencia:"M/F 22-40 | Fitness | Gym CDMX/GDL/MTY",copy:"Después del gym, tus pies necesitan esto. SilkaMedic Spray: sin tocar, sin residuo, máxima higiene en segundos.",cta:"Conocer más",kpi:"Reach >500K | CPM <$85 MXN | Video Views",budget:"5%",ocasion:"Post-gym / higiene activa",keywords:"gym, fitness, crossfit, running, natación"},
   {dia:"LUNES",diaColor:"#1A5276",funnel:"CONSIDERATION",canal:"Google Search",formato:"Expanded Text Ad + RSA",producto:"GEL",audiencia:"Intent: tratamiento pie atleta, hongo pies",copy:"Cura Pie de Atleta en 7 Días — SilkaMedic Gel 1% Terbinafina. La misma fórmula que el #1 mundial. Desde $149. Envío gratis Amazon.",cta:"Comprar en Amazon",kpi:"CTR >8% | CPC <$18 MXN | Conv Rate >4%",budget:"12%",ocasion:"Síntoma activo (búsqueda urgente)",keywords:"comprar antifúngico, terbinafina gel, silka medic precio"},
@@ -1064,7 +1065,7 @@ const ADS_PLAN = [
   {dia:"DOMINGO",diaColor:"#2E86C1",funnel:"PERFORMANCE",canal:"Google Search",formato:"Branded defense + conquista",producto:"MARCA",audiencia:"Branded searches + competitor brand queries",copy:"SilkaMedic — #1 en Cuidado del Pie en México | Genomma Lab | Terbinafina 1% | Cura en 7 días",cta:"Comprar ahora",kpi:"Impression Share >90% | Brand Protect | CPA",budget:"4%",ocasion:"Búsqueda de marca directa (Sunday browsing)",keywords:"silka medic, silkamedic, silka medic gel"}
 ];
 
-const ROI_DATA = [
+let ROI_DATA = [
   ["Google Search — Branded","8x - 12x","$90 - $120","10% - 15%","6% - 9%","N/A"],
   ["Google Search — Non-Branded","4x - 7x","$140 - $180","6% - 9%","3% - 5%","N/A"],
   ["Amazon Sponsored Products","5x - 8x","$110 - $150","0.5% - 1.2%","8% - 15%","12% - 18%"],
@@ -1076,7 +1077,7 @@ const ROI_DATA = [
   ["Google Shopping","6x - 9x","$120 - $160","1% - 2%","4% - 7%","N/A"]
 ];
 
-const BUDGET_DATA = [
+let BUDGET_DATA = [
   {label:"Google Search",pct:30,color:"#4285F4"},
   {label:"Amazon DSP/SP",pct:28,color:"#F5A623"},
   {label:"Meta Ads",pct:22,color:"#1877F2"},
@@ -1085,7 +1086,7 @@ const BUDGET_DATA = [
   {label:"Display/Prog.",pct:3,color:"#34A853"}
 ];
 
-const PHASES = [
+let PHASES = [
   {color:"#2980B9",title:"FASE 1: AWARENESS (Semana 1-2)",objetivo:"Brand Recall + Reach masivo",canales:"YouTube Pre-roll 15s + TikTok TopView + Meta Reels 9:16",kpis:"Brand Awareness Lift >15% | Reach >2M únicos/sem | VTR >35% | CPM <$90 MXN",productos:"GEL (héroe) + SPRAY (lifestyle activo)",budget:"20% del budget total",copy:"Claim Rapidísísísísimo · Tono empático · Problema → solución"},
   {color:"#27AE60",title:"FASE 2: CONSIDERATION (Semana 2-3)",objetivo:"Intención de compra activa + comparación",canales:"Google Search (conquista) + Meta Carrusel + Amazon Brand Store",kpis:"CTR >8% Google | Consideration Lift >20% | CPC <$18 MXN | Store Visits +40%",productos:"GEL (vs Lamisil) + SPRAY (lifestyle) + TALCO (familia)",budget:"30% del budget total",copy:"400% más rápido · Terbinafina 1% · Evidencia Kantar STSL 75"},
   {color:"#E74C3C",title:"FASE 3: CONVERSION (Semana 3-4 y ongoing)",objetivo:"Ventas directas + ROAS positivo sostenido",canales:"Amazon SP + Google Shopping + Meta Dynamic Ads retargeting",kpis:"ACOS <18% | ROAS >400% | CPA <$160 MXN | Cart Add Rate >8%",productos:"GEL (héroe) → SPRAY → TALCO (cross-sell)",budget:"35% del budget total",copy:"Precio + entrega + stock disponible · Urgencia · CTA directo"},
@@ -1093,12 +1094,189 @@ const PHASES = [
 ];
 
 // ══════════════════════════════════════════
+// SILKAMEDIC DATA SNAPSHOT
+// ══════════════════════════════════════════
+const SILKAMEDIC_DATA = {
+  keywords: KEYWORDS, prompts: PROMPTS, adsPlan: ADS_PLAN,
+  roiData: ROI_DATA, budgetData: BUDGET_DATA, phases: PHASES,
+  channelBudget: [{canal:"Google Search",pct:30,color:"#4285F4"},{canal:"Amazon DSP/SP",pct:28,color:"#F5A623"},{canal:"Meta Ads",pct:22,color:"#1877F2"},{canal:"TikTok",pct:10,color:"#000000"},{canal:"YouTube",pct:7,color:"#FF0000"},{canal:"Display/Prog.",pct:3,color:"#34A853"}]
+};
+
+// ══════════════════════════════════════════
+// LOMECAN DATA
+// ══════════════════════════════════════════
+const LOMECAN_KEYWORDS = [
+  ["comprar lomecan","UNO","Transaccional","Exact","9,200","$22","Alta","1","95","ACTIVA","KW ancla principal. Bid agresivo. Never pause."],
+  ["lomecan precio mexico","Todos","Transaccional","Exact","6,800","$18","Alta","1","92","ACTIVA","Incluir precio en anuncio + extensión precio."],
+  ["lomecan donde comprar","Todos","Transaccional","Exact","4,100","$15","Media","1","88","ACTIVA","Dirigir a Donde Comprar + Amazon link."],
+  ["lomecan uno amazon","UNO","Transaccional","Exact","3,400","$12","Baja","1","93","ACTIVA","Alta conversion Amazon. Puja top of search."],
+  ["fluconazol 150mg comprar","UNO","Transaccional","Phrase","5,600","$25","Alta","1","91","ACTIVA","Conquista generica fluconazol. Bid alto."],
+  ["lomecan crema precio","Crema","Transaccional","Exact","2,900","$14","Media","1","89","ACTIVA","Posicionar crema como alternativa economica."],
+  ["pastilla infeccion vaginal una toma","UNO","Transaccional","Phrase","4,200","$20","Alta","1","90","ACTIVA","Diferenciador 1 sola toma. Explotar."],
+  ["crema vaginal hongos 3 dias","Crema","Transaccional","Phrase","3,100","$16","Media","1","87","ACTIVA","Claim 3 dias en ad copy. Confianza."],
+  ["tratamiento candidiasis una sola dosis","UNO","Transaccional","Phrase","2,800","$18","Alta","1","88","ACTIVA","Alta intencion de compra. Puja maxima."],
+  ["mejor antifungico vaginal mujer","Todos","Comercial","Phrase","14,200","$28","Muy Alta","1","84","ACTIVA","Top of consideration. Extensión sitelinks."],
+  ["lomecan vs canesten v","UNO","Comercial","Exact","3,600","$32","Alta","1","86","ACTIVA","Conquista directa. Ad: alivia desde el dia 1."],
+  ["tratamiento infeccion vaginal rapido","Todos","Comercial","Phrase","11,800","$22","Alta","1","83","ACTIVA","Conectar con claim dia 1 alivio."],
+  ["fluconazol mejor que clotrimazol","Todos","Comercial","Phrase","4,400","$20","Media","2","80","ACTIVA","Educar en diferencia de ingrediente activo."],
+  ["infeccion vaginal que no se cura","Todos","Comercial","Phrase","8,900","$18","Alta","1","82","ACTIVA","Pain point recurrencia. Copy empatico."],
+  ["candidiasis recurrente tratamiento","Todos","Comercial","Phrase","6,200","$22","Alta","1","81","ACTIVA","Post-antibiotico + reincidencia."],
+  ["antifungico vaginal sin receta","Todos","Comercial","Phrase","9,100","$24","Alta","2","79","ACTIVA","OTC claim. Acceso facil. Sin barreras."],
+  ["antifungico vaginal gym sudoracion","Todos","Comercial","Phrase","3,800","$16","Media","1","82","ACTIVA","Ocasion gym. Audiencia activa."],
+  ["sintomas infeccion vaginal hongos","Todos","Informacional","Phrase","28,400","$9","Alta","2","55","ACTIVA","Top of funnel. Landing educativa + remarketing."],
+  ["ardor vaginal que hacer","Todos","Informacional","Phrase","18,600","$7","Media","2","52","ACTIVA","Pain point urgente. Empatico + solucion."],
+  ["flujo anormal con olor causas","Todos","Informacional","Phrase","14,200","$6","Media","2","48","ACTIVA","Alto volumen. Video ads empaticos."],
+  ["candidiasis vulvovaginal tratamiento","Todos","Informacional","Phrase","9,400","$8","Media","2","60","ACTIVA","Captura awareness. Remarketing con UNO."],
+  ["infeccion vaginal despues del periodo","Esos Dias","Informacional","Phrase","7,200","$7","Media","2","58","ACTIVA","Ocasion menstruacion. Esos Dias = solucion."],
+  ["ph vaginal como equilibrar","Todos","Informacional","Phrase","5,800","$6","Baja","3","50","ACTIVA","Educar → comparar → convertir."],
+  ["candidiasis post antibiotico","Todos","Informacional","Phrase","4,600","$8","Baja","2","62","ACTIVA","Ocasion post-antibiotico. UNO = solucion."],
+  ["lomecan","Todos","Branded","Exact","22,100","$6","Baja","1","97","ACTIVA","Defender SIEMPRE. Puja maxima. Never pause."],
+  ["lomecan uno capsula","UNO","Branded","Exact","9,800","$5","Baja","1","97","ACTIVA","Variante exacta producto."],
+  ["lomecan crema vaginal","Crema","Branded","Exact","4,200","$5","Baja","1","96","ACTIVA","Exacto al producto. Puja alta."],
+  ["lomecan esos dias","Esos Dias","Branded","Exact","2,100","$4","Baja","1","95","ACTIVA","Producto especifico. Ocasion menstruacion."],
+  ["lomecan genomma lab","Todos","Branded","Exact","1,800","$4","Baja","1","96","ACTIVA","Refuerza confianza Genomma Lab."],
+  ["canesten v precio mexico","UNO","Conquista","Phrase","8,400","$35","Muy Alta","1","80","ACTIVA","Ad comparativo: alivio desde dia 1."],
+  ["canesten v alternativa mas economica","Todos","Conquista","Phrase","5,200","$30","Alta","1","78","ACTIVA","Conquista precio + eficacia. ROI positivo."],
+  ["diflucan precio mexico sin receta","UNO","Conquista","Phrase","6,100","$28","Alta","2","76","ACTIVA","Fluconazol OTC vs RX. Lomecan = sin receta."],
+  ["clotrimazol ovulo alternativa oral","Crema","Conquista","Phrase","3,400","$20","Media","2","74","ACTIVA","UNO oral vs ovulo. Conveniencia."],
+  ["monistat alternativa mexico","Todos","Conquista","Phrase","2,200","$18","Media","2","72","ACTIVA","Mercado vs marcas USA. Accesibilidad."],
+  ["higiene intima menstruacion productos","Esos Dias","Estacional","Phrase","7,600","$10","Media","1","78","ACTIVA","Peak durante periodo. Esos Dias = hero."],
+  ["infeccion vaginal verano calor","Todos","Estacional","Phrase","5,100","$12","Media","1","80","ACTIVA","Estacionalidad calor+humedad. Peak Mayo-Sep."]
+];
+
+const LOMECAN_PROMPTS = [
+  {producto:"UNO",tipo:"Hero Packshot",canal:["Amazon"],formato:"1:1",bg:"#00B5C8",
+   prompt:"Professional pharmaceutical product photography of Lomecan UNO capsule blister pack with box. Pure white seamless background. Teal (#00B5C8) and purple (#8B2FC9) packaging. Studio lighting. Hyper-realistic. Macro detail on Fluconazol 150mg and '1 Sola Toma' claim. Ultra-sharp 4K. Subtle hibiscus flower motif.",
+   mood:"Farmacéutico premium / Femenino",texto:"'1 Sola Toma' | 'Fluconazol 150mg' | 'Alivia desde el día 1'",notas:"Fondo blanco Amazon. 85%+ producto en frame."},
+  {producto:"UNO",tipo:"Hero + Claim Badges",canal:["Amazon"],formato:"1:1",bg:"#007A8A",
+   prompt:"Lomecan UNO capsule box on white background. Teal badge: 'Alivia ardor desde el Día 1'. Purple badge: '1 Sola Cápsula'. Circular badge: 'Fluconazol 150mg'. Premium lighting. Hibiscus corner. Hyperrealistic.",
+   mood:"Farmacéutico / Trust",texto:"'Día 1' | '1 Toma' | 'Tratamiento Completo'",notas:"Máximo 3 badges. Legible en mobile."},
+  {producto:"UNO",tipo:"Lifestyle 1 Sola Toma",canal:["Meta","Stories"],formato:"4:5 / 9:16",bg:"#5B2C8A",
+   prompt:"Empowering lifestyle photo. Latina woman (28-35) in modern bathroom holding Lomecan UNO capsule between two fingers. Teal bracelet on wrist. Hibiscus flowers softly blurred background. Warm morning light. Confident expression. Product box on counter. Authentic, not clinical.",
+   mood:"Empoderado / Femenino / Natural",texto:"'Una cápsula. Cualquier hora. Ya.'",notas:"Inspirado en visual de marca. Mano elegante."},
+  {producto:"UNO",tipo:"Infografico Beneficios",canal:["Amazon","Meta"],formato:"1:1 / 4:5",bg:"#00707E",
+   prompt:"Clean infographic on teal gradient. Lomecan UNO centered top. 4 benefit icons: [clock] '1 Sola Toma', [calendar] 'Cualquier Hora', [shield] 'Tratamiento Completo', [star] 'Fluconazol 150mg'. Hibiscus accent. Modern feminine pharmaceutical design.",
+   mood:"Informativo / Científico-Femenino",texto:"'1 toma' | 'Cualquier hora' | 'Completo'",notas:"Texto legible a 150px."},
+  {producto:"Crema",tipo:"Hero Packshot",canal:["Amazon"],formato:"1:1",bg:"#00B5C8",
+   prompt:"Professional studio photography Lomecan Crema Clotrimazol 2% tube with box and applicator. Pure white background. Teal and white tube. 45 degree angle showing tube and applicator together. Ultra-realistic. Clotrimazol 2% prominently visible. Hibiscus motif on packaging.",
+   mood:"Farmacéutico premium",texto:"'Clotrimazol 2%' | 'Con aplicador' | '3 días'",notas:"Mostrar aplicador claramente."},
+  {producto:"Crema",tipo:"Lifestyle 3 Dias",canal:["Amazon","Meta"],formato:"4:5",bg:"#1A4A7A",
+   prompt:"Split composition. LEFT: Woman sitting on bed edge, uncomfortable, dim light. RIGHT: Same woman 3 days later, confident smile, bright bathroom. Lomecan Crema tube in corner. Text: 'Día 1: Aplicas. Día 3: Aliviada.' Warm authentic photography.",
+   mood:"Emocional / Antes-Después",texto:"'3 días para tu alivio completo'",notas:"Empático y hogareño. Sin clínico."},
+  {producto:"Crema",tipo:"Síntomas Alivio",canal:["Amazon"],formato:"1:1",bg:"#154360",
+   prompt:"Clean benefit infographic. White background. 4 symptom icons in teal circles: [lightning] 'Ardor', [hand] 'Comezón', [droplet] 'Flujo anormal', [flame] 'Irritación'. Arrow to Lomecan Crema. Below: 'Alivia los 4 síntomas — Clotrimazol 2%'. Feminine pharmaceutical design.",
+   mood:"Informativo / Síntomas claros",texto:"'Ardor · Comezón · Flujo · Irritación'",notas:"Los 4 síntomas del estudio de mercado."},
+  {producto:"Crema",tipo:"Instrucciones de Uso",canal:["Amazon"],formato:"1:1",bg:"#0D5C6C",
+   prompt:"3-step instructional with teal step circles. Step 1: Tube with applicator disassembled. Step 2: Application diagram (tasteful). Step 3: Calendar showing 3 days checked. Teal arrows connecting steps. Professional feminine pharmaceutical style.",
+   mood:"Educativo / Claro",texto:"'Paso 1-3' | 'Una vez al día · 3 días'",notas:"Sin imágenes explícitas. Diagrama/ícono."},
+  {producto:"Esos Dias",tipo:"Lifestyle Menstruacion",canal:["Meta","TikTok"],formato:"9:16 / 4:5",bg:"#5B1F7A",
+   prompt:"Young woman (20-28) in comfortable athleisure on couch. Calendar with period marked softly visible. Lomecan 'Esos Días' product on side table. Warm home environment. Teal and purple tones. Authentic comfort and confidence during period.",
+   mood:"Empoderado / Confort",texto:"'Para esos días. Con la protección correcta.'",notas:"No médico. Doméstico. Auténtico."},
+  {producto:"UNO",tipo:"Lifestyle Confianza Post-cura",canal:["Meta"],formato:"4:5",bg:"#145A32",
+   prompt:"Confident woman (28-38) laughing naturally with friends in bright café. Feeling free and comfortable. Subtle Lomecan element nearby. Warm golden light. Authentic social moment. Caption space: 'Ya no piensas en eso. Lomecan ya hizo su trabajo.'",
+   mood:"Aspiracional / Libertad / Confianza",texto:"'De vuelta a tu vida. Sin pensarlo.'",notas:"Post-tratamiento. Mujer segura y activa."},
+  {producto:"Todos",tipo:"Lifestyle Frescura Intima",canal:["Meta","YouTube"],formato:"16:9 / 4:5",bg:"#0E6655",
+   prompt:"Woman (25-35) in light linen clothing, morning routine in bright minimal bathroom. Hibiscus flowers, teal and white tones. Lomecan product family on marble counter. Natural morning light. Clean, modern, feminine pharmaceutical aesthetic. Sensibilidad y frescura como conceptos clave.",
+   mood:"Frescura / Sensibilidad / Femenino",texto:"'Tu zona íntima merece lo mejor'",notas:"Sensibilidad + frescura = conceptos clave del estudio."},
+  {producto:"UNO",tipo:"Comparativo vs Canesten",canal:["Google Display","Meta"],formato:"1.91:1",bg:"#7B241C",
+   prompt:"Side by side comparison banner. LEFT: generic treatment in gray with discomfort icons. RIGHT: Lomecan UNO on vibrant teal with '1 Sola Toma' and 'Alivia desde Día 1'. Center: 'La diferencia es clara'. Feminine pharmaceutical advertising style.",
+   mood:"Comparativo / Impactante",texto:"'1 sola toma vs tratamientos de días'",notas:"Legal: sin mencionar marca por nombre en imagen."},
+  {producto:"Todos",tipo:"Brand Hero Awareness",canal:["Meta","YouTube"],formato:"16:9 / 9:16",bg:"#005F6E",
+   prompt:"Cinematic hero visual. Deep teal gradient background. Center: 'Tu infección vaginal tiene los días contados' with soft light effect. Lomecan UNO box and Crema tube with hibiscus flowers. Lomecan logo centered. Ultra-cinematic feminine health brand feel. Purple accent lighting.",
+   mood:"Premium / Autoridad de Marca",texto:"'Lomecan · Genomma Lab 20+ años'",notas:"Hibiscus flowers como identidad visual."},
+  {producto:"UNO",tipo:"pH Balance Educativo",canal:["Meta","Stories"],formato:"4:5 / 1:1",bg:"#1F4E79",
+   prompt:"Clean educational infographic. Teal background. pH balance scale from 3.5 to 7 with female silhouette and optimal zone in purple. Text: 'Tu pH vaginal en equilibrio = sin hongos, sin olor, sin ardor'. Lomecan product image corner. Hibiscus accent.",
+   mood:"Educativo / Científico-Femenino",texto:"'pH equilibrado = vagina sana'",notas:"pH = beneficio #1 del estudio de mercado."},
+  {producto:"Todos",tipo:"Portfolio Familia Productos",canal:["Amazon","Meta"],formato:"4:5 / 1:1",bg:"#6C3483",
+   prompt:"Elegant product family. Marble surface. Lomecan UNO box, Crema tube, Esos Dias product arranged with fresh hibiscus flowers. Text in teal: 'Para cada momento. Una solución Lomecan.' Morning window light. Premium feminine aesthetic.",
+   mood:"Estratégico / Portfolio / Premium",texto:"'UNO · Crema · Esos Días'",notas:"Cross-sell visual. Hibiscus hilo conductor."},
+  {producto:"Todos",tipo:"Testimonial Social Card",canal:["Meta","Stories"],formato:"4:5 / 9:16",bg:"#1A5276",
+   prompt:"Social media testimonial card. Soft teal background. Illustrated female avatar. 5 purple stars. White font quote: 'Una sola capsula y al dia siguiente ya no sentia nada. Lo mejor es que solo la tomas una vez!' — Mariana G., CDMX. Lomecan logo bottom right. Hibiscus accent.",
+   mood:"Confianza / Social Proof",texto:"5 estrellas | '1 sola toma' | CDMX",notas:"Sin fotos reales. Avatar ilustrado femenino."}
+];
+
+const LOMECAN_ADS_PLAN = [
+  {dia:"LUNES",diaColor:"#00879E",funnel:"AWARENESS",canal:"YouTube",formato:"Pre-roll 15s no-skip + Bumper 6s",producto:"UNO",audiencia:"Mujeres 18-40 | NSE C-B | Salud femenina, ginecología",copy:"¿Ardor e incomodidad vaginal? Lomecan UNO lo resuelve en 1 sola toma. Desde el primer día.",cta:"Ver más / Comprar",kpi:"Views 60%+ | Brand Recall | VTR >35%",budget:"8%",ocasion:"Síntoma activo — awareness mañana",keywords:"infeccion vaginal, ardor vaginal, hongos vaginales"},
+  {dia:"LUNES",diaColor:"#00879E",funnel:"AWARENESS",canal:"Meta Ads",formato:"Reels 9:16 / 15s",producto:"Crema",audiencia:"Mujeres 20-38 | Salud íntima | Lifestyle femenino",copy:"3 días. Una crema. Sin ardor, sin flujo, sin irritación. Lomecan Crema Clotrimazol 2% — alivia los 4 síntomas.",cta:"Conocer más",kpi:"Reach >400K | CPM <$80 MXN | Video Views",budget:"5%",ocasion:"Síntoma activo / inicio ciclo",keywords:"higiene intima, salud vaginal, infeccion hongos"},
+  {dia:"LUNES",diaColor:"#00879E",funnel:"CONSIDERATION",canal:"Google Search",formato:"Expanded Text Ad + RSA",producto:"UNO",audiencia:"Intent: candidiasis, infección vaginal tratamiento",copy:"Alivia Candidiasis en 1 Toma — Lomecan UNO Fluconazol 150mg. Desde el día 1. Sin receta. Envío gratis Amazon.",cta:"Comprar en Amazon",kpi:"CTR >8% | CPC <$22 MXN | Conv Rate >4%",budget:"12%",ocasion:"Búsqueda urgente síntoma activo",keywords:"comprar lomecan, fluconazol 150mg, pastilla infeccion vaginal"},
+  {dia:"LUNES",diaColor:"#00879E",funnel:"CONVERSION",canal:"Amazon SP",formato:"Sponsored Products - Top of Search",producto:"UNO + Crema",audiencia:"Shoppers: antifungico vaginal, candidiasis, fluconazol",copy:"Alivia Ardor y Comezón desde el Día 1 | 1 Sola Toma | Fluconazol 150mg | Tratamiento Completo",cta:"Agregar al carrito",kpi:"ACOS <18% | CTR >0.5% | Unit Sales",budget:"10%",ocasion:"Compra activa / urgencia",keywords:"lomecan, antifungico vaginal, fluconazol comprar"},
+  {dia:"MARTES",diaColor:"#7B2EB5",funnel:"CONSIDERATION",canal:"Google Search",formato:"RSA + Price Extensions",producto:"UNO",audiencia:"Intent comercial — comparación Canesten",copy:"¿Canesten no alivia rápido? Lomecan UNO actúa desde el Día 1. 1 sola toma. Fluconazol 150mg. Sin receta. Desde $189.",cta:"Ver diferencia",kpi:"CTR >9% | Conv >5% | ROAS >400%",budget:"8%",ocasion:"Comparación activa / consideración",keywords:"canesten alternativa, mejor antifungico vaginal, fluconazol precio"},
+  {dia:"MARTES",diaColor:"#7B2EB5",funnel:"CONSIDERATION",canal:"Meta Ads",formato:"Carrusel Facebook / IG",producto:"TODOS",audiencia:"Lookalike 2% compradoras | Retargeting web",copy:"Slide 1: ¿Cuál es tu síntoma? Slide 2: UNO = 1 toma. Slide 3: Crema = 3 días. Slide 4: Esos Días = periodo.",cta:"Ver productos",kpi:"CTR >1.5% | CPA <$200 MXN | Add-to-Cart",budget:"7%",ocasion:"Descubrimiento portafolio completo",keywords:"higiene intima, salud femenina, farmacia online"},
+  {dia:"MARTES",diaColor:"#7B2EB5",funnel:"AWARENESS",canal:"TikTok",formato:"In-Feed 15s + Spark Ads",producto:"UNO",audiencia:"Mujeres 18-32 | #SaludFemenina",copy:"POV: llevas días con esa incomodidad y no puedes más. Lomecan UNO: una cápsula y listo. Desde el día 1, sin drama.",cta:"Seguir / Ver más",kpi:"Views >800K | Engagement >5%",budget:"5%",ocasion:"Síntoma activo / búsqueda solución rápida",keywords:"saludfemenina, infeccionvaginal, lomecan"},
+  {dia:"MARTES",diaColor:"#7B2EB5",funnel:"CONVERSION",canal:"Amazon DSP",formato:"Retargeting — PDP viewers últimos 7 días",producto:"UNO",audiencia:"Usuarias que vieron producto sin comprar",copy:"¿Todavía piensas en Lomecan UNO? Envío gratis y entrega en 24h. Alivia desde el primer día.",cta:"Comprar ahora",kpi:"ROAS >500% | CTR >0.8% | Conv uplift",budget:"5%",ocasion:"Retargeting urgente / intención reciente",keywords:"[Behavioral: product page viewers Lomecan]"},
+  {dia:"MIÉRCOLES",diaColor:"#00879E",funnel:"CONVERSION",canal:"Amazon SP",formato:"Sponsored Products + Brand Store",producto:"UNO",audiencia:"Branded + conquista competidoras",copy:"Lomecan UNO — Alivia desde el Día 1 | 1 Sola Toma | Fluconazol 150mg | Envío Prime",cta:"Agregar al carrito",kpi:"ACOS <15% | Top of Search | Sales Rank",budget:"12%",ocasion:"Compra activa / mid-week peak",keywords:"lomecan, lomecan uno, antifungico vaginal una toma"},
+  {dia:"MIÉRCOLES",diaColor:"#00879E",funnel:"CONSIDERATION",canal:"Amazon SB",formato:"Sponsored Brands — Video 15s",producto:"UNO",audiencia:"Category shoppers: candidiasis, infeccion vaginal",copy:"Video 15s: cápsula → día siguiente confianza total. '1 sola toma. Alivia ardor y comezón desde el día 1.'",cta:"Ver tienda",kpi:"Video CTR >1% | Brand Halo | NTB >50%",budget:"7%",ocasion:"Awareness en Amazon / mid-week",keywords:"candidiasis, fluconazol 150mg, infeccion vaginal tratamiento"},
+  {dia:"MIÉRCOLES",diaColor:"#00879E",funnel:"CONVERSION",canal:"Meta Ads",formato:"Dynamic Ads / Retargeting",producto:"UNO + Crema",audiencia:"Visitantes web + carrito abandonado",copy:"¿Sigues buscando alivio? Lomecan está a un clic. 1 toma. Resultado desde el día 1. Envío a domicilio.",cta:"Comprar ahora",kpi:"ROAS >450% | CTR >2% | Conv rate >6%",budget:"6%",ocasion:"Retargeting post-visita / carrito abandonado",keywords:"[Behavioral: lomecan site visitors, cart abandoners]"},
+  {dia:"JUEVES",diaColor:"#7B2EB5",funnel:"CONVERSION",canal:"Google Shopping",formato:"Smart Shopping + CSS MX",producto:"UNO + Crema",audiencia:"High-intent: comprar antifungico vaginal",copy:"Lomecan UNO — 1 Toma — $189 MXN | Crema Lomecan 3 días — $149 MXN | Envío gratis",cta:"Comprar",kpi:"ROAS >600% | CPA <$150 MXN | Impression Share",budget:"8%",ocasion:"Alta intención compra / búsqueda con precio",keywords:"lomecan precio, antifungico vaginal precio"},
+  {dia:"JUEVES",diaColor:"#7B2EB5",funnel:"CONSIDERATION",canal:"YouTube",formato:"TrueView In-Stream 30s",producto:"Crema",audiencia:"Mujeres 25-45 | Salud, ginecología, bienestar",copy:"Video 30s educativo: síntomas candidiasis → Lomecan Crema → 3 días → los 4 síntomas aliviados.",cta:"Más información / Comprar",kpi:"VTR >30% | View-to-Click >5%",budget:"5%",ocasion:"Educación y consideración — crema",keywords:"infeccion vaginal crema, clotrimazol 2%, lomecan crema"},
+  {dia:"JUEVES",diaColor:"#7B2EB5",funnel:"AWARENESS",canal:"TikTok",formato:"Spark Ads + UGC Style",producto:"Todos",audiencia:"Mujeres 18-30 | #FemTok",copy:"'Nadie habla de esto pero hay que decirlo: Lomecan UNO es la solución más fácil. Una cápsula. Listo.' UGC format.",cta:"Ver más",kpi:"Views >600K | Completion Rate >40%",budget:"4%",ocasion:"Destigmatización / conversación abierta",keywords:"femtok, saludfemenina, candidiasis"},
+  {dia:"VIERNES",diaColor:"#00879E",funnel:"CONVERSION",canal:"Amazon DSP",formato:"Audience targeting — lifestyle + health",producto:"UNO",audiencia:"Mujeres interés salud femenina + compraron OTC reciente",copy:"El alivio que estabas buscando. Lomecan UNO — 1 sola toma — alivia ardor desde el día 1.",cta:"Comprar hoy",kpi:"ROAS >480% | CTR >0.9% | NTB >45%",budget:"6%",ocasion:"Pre-weekend / decisión de compra viernes",keywords:"[Behavioral: OTC buyers, feminine health interest]"},
+  {dia:"VIERNES",diaColor:"#00879E",funnel:"CONVERSION",canal:"Meta Ads",formato:"Dynamic Product Ads — DPA",producto:"UNO + Crema",audiencia:"Retargeting 30 días + lookalike compradores",copy:"Lomecan te espera. 1 toma para UNO. 3 días para la Crema. Elige tu solución. Envío a domicilio hoy.",cta:"Comprar ahora",kpi:"ROAS >500% | CPA <$180 MXN",budget:"5%",ocasion:"Viernes tarde / fin de semana decisión",keywords:"[DPA: lomecan product catalog]"},
+  {dia:"VIERNES",diaColor:"#00879E",funnel:"CONSIDERATION",canal:"Google Display",formato:"Responsive Display + HTML5",producto:"UNO",audiencia:"In-market: salud femenina, farmacia online",copy:"¿Ardor vaginal? Lomecan UNO — 1 sola toma. Alivia desde el Día 1. Fluconazol 150mg. Sin receta.",cta:"Saber más",kpi:"CTR >0.35% | Viewability >70%",budget:"4%",ocasion:"Awareness mid-funnel display",keywords:"infeccion vaginal, salud intima, antifungico vaginal"},
+  {dia:"SÁBADO",diaColor:"#1A7A4F",funnel:"CONVERSION",canal:"Amazon SP",formato:"Weekend Boost — Top of Search",producto:"UNO + Crema",audiencia:"Weekend shoppers — salud y bienestar",copy:"Lomecan UNO — Entrega Hoy con Amazon Prime | Alivia desde el Día 1 | 1 Sola Toma",cta:"Agregar al carrito",kpi:"ACOS <20% | Weekend Sales Spike",budget:"8%",ocasion:"Peak de compras fin de semana",keywords:"lomecan uno amazon, antifungico vaginal amazon"},
+  {dia:"SÁBADO",diaColor:"#1A7A4F",funnel:"AWARENESS",canal:"Meta Ads",formato:"Stories + Reels — weekend content",producto:"Esos Dias",audiencia:"Mujeres 18-35 | Lifestyle | Weekend scrollers",copy:"Para esos días de incomodidad durante tu periodo. Lomecan Esos Días — higiene íntima reforzada.",cta:"Descubrir",kpi:"Reach >300K | Story Swipe-Up",budget:"4%",ocasion:"Menstruación / fin de semana",keywords:"higiene intima periodo, menstruacion, lomecan esos dias"},
+  {dia:"SÁBADO",diaColor:"#1A7A4F",funnel:"AWARENESS",canal:"TikTok",formato:"Brand Takeover + In-Feed",producto:"UNO",audiencia:"Mujeres 18-28 | Weekend TikTok peak",copy:"'¿Sabías que el hongo vaginal puede resolverse en 1 sola toma? Lomecan UNO. Sin drama, sin espera.'",cta:"Aprender más",kpi:"Views >1.2M | Brand Mentions",budget:"4%",ocasion:"Weekend awareness peak TikTok",keywords:"saludfemenina, lomecan, infeccionvaginal"},
+  {dia:"SÁBADO",diaColor:"#1A7A4F",funnel:"CONSIDERATION",canal:"Amazon SB",formato:"Store Spotlight — portafolio completo",producto:"TODOS",audiencia:"Category browsers — salud femenina Amazon",copy:"Descubre el portafolio Lomecan: UNO · Crema · Esos Días · Íntimo · Piel Sensible.",cta:"Ver tienda Lomecan",kpi:"Store Visits | DPVR | Brand Halo ROAS",budget:"3%",ocasion:"Portfolio discovery / cross-sell",keywords:"lomecan tienda, portafolio lomecan"},
+  {dia:"DOMINGO",diaColor:"#B5470E",funnel:"LOYALTY",canal:"Amazon DSP",formato:"Retargeting compradores 30-90 días",producto:"UNO → Esos Dias",audiencia:"Compradoras previas — retargeting loyalty",copy:"¿Ya terminaste tu tratamiento Lomecan? Mantén tu bienestar. Descubre Esos Días e Íntimo para tu rutina.",cta:"Ver más productos",kpi:"Repurchase Rate >25% | Bundle Rate",budget:"5%",ocasion:"Retención / recompra / rutina íntima",keywords:"[Behavioral: past Lomecan purchasers]"},
+  {dia:"DOMINGO",diaColor:"#B5470E",funnel:"CONVERSION",canal:"Google Search",formato:"Branded defense — alto bid",producto:"UNO + Crema",audiencia:"Branded searches — lomecan, lomecan uno",copy:"Lomecan Oficial — Alivia desde el Día 1 | Fluconazol 150mg | 1 Sola Toma | Envío gratis",cta:"Comprar en Amazon",kpi:"IS >95% | CTR >15% | ACOS Brand <5%",budget:"4%",ocasion:"Branded defense dominical",keywords:"lomecan, lomecan uno capsula, lomecan precio"}
+];
+
+const LOMECAN_ROI_DATA = [
+  ["Google Search — Branded","8x - 12x","$90 - $120","10% - 18%","6% - 9%","N/A"],
+  ["Google Search — Non-Branded","4x - 7x","$150 - $200","6% - 9%","3% - 5%","N/A"],
+  ["Amazon Sponsored Products","5x - 8x","$120 - $160","0.5% - 1.2%","10% - 18%","12% - 20%"],
+  ["Amazon DSP — Retargeting","6x - 10x","$110 - $150","0.8% - 1.5%","12% - 20%","N/A"],
+  ["Meta Ads — Awareness","2x - 3x","N/A","0.8% - 1.5%","1% - 2%","N/A"],
+  ["Meta Ads — Retargeting","5x - 8x","$140 - $180","1.5% - 3%","3% - 6%","N/A"],
+  ["TikTok — In-Feed + Spark Ads","2x - 4x","N/A","2% - 6%","0.5% - 1.5%","N/A"],
+  ["YouTube — Pre-roll","1.5x - 2.5x","N/A","VTR 35-45%","N/A","N/A"],
+  ["Google Shopping","6x - 9x","$130 - $170","1% - 2%","4% - 7%","N/A"]
+];
+
+const LOMECAN_BUDGET_DATA = [
+  {label:"Amazon DSP/SP",pct:30,color:"#F5A623"},
+  {label:"Google Search",pct:28,color:"#4285F4"},
+  {label:"Meta Ads",pct:24,color:"#1877F2"},
+  {label:"TikTok",pct:8,color:"#000000"},
+  {label:"YouTube",pct:7,color:"#FF0000"},
+  {label:"Display/Prog.",pct:3,color:"#34A853"}
+];
+
+const LOMECAN_PHASES = [
+  {color:"#00879E",title:"FASE 1: AWARENESS (Semana 1-2)",objetivo:"Destigmatizar + Brand Recall + Reach masivo mujer 16-35",canales:"YouTube Pre-roll 15s + TikTok Spark Ads + Meta Reels 9:16",kpis:"Brand Awareness Lift >15% | Reach >1.5M únicos/sem | VTR >35% | CPM <$85 MXN",productos:"UNO (héroe 1 toma) + Crema (alternativa 3 días)",budget:"20% del budget total",copy:"Alivia desde el Día 1 · Tono empático femenino · Problema → solución sin drama"},
+  {color:"#7B2EB5",title:"FASE 2: CONSIDERATION (Semana 2-3)",objetivo:"Intención de compra activa + diferenciación vs Canesten V",canales:"Google Search conquista + Meta Carrusel + Amazon Brand Store",kpis:"CTR >8% Google | Consideration Lift >20% | CPC <$22 MXN | Store Visits +35%",productos:"UNO (vs Canesten V) + Crema (síntomas) + Esos Días (menstruación)",budget:"30% del budget total",copy:"1 sola toma · Alivia ardor y comezón desde el Día 1 · Fluconazol 150mg probado"},
+  {color:"#E74C3C",title:"FASE 3: CONVERSION (Semana 3-4 y ongoing)",objetivo:"Ventas directas + ROAS positivo + liderazgo Amazon categoría",canales:"Amazon SP + Google Shopping + Meta Dynamic Ads retargeting",kpis:"ACOS <18% | ROAS >400% | CPA <$180 MXN | Cart Add Rate >8%",productos:"UNO (héroe) → Crema → Esos Días (cross-sell)",budget:"35% del budget total",copy:"Precio + entrega + 1 sola toma · Urgencia · CTA directo a Amazon"},
+  {color:"#8E44AD",title:"FASE 4: LOYALTY & RETENCIÓN (Ongoing 30+ días)",objetivo:"LTV + Recompra + Cross-sell hacia higiene íntima rutina",canales:"Amazon DSP retargeting + Meta CRM + Email automation",kpis:"Repurchase Rate >25% (90 días) | Bundle UNO+Esos Días >20% | ROAS >550%",productos:"Esos Días (prevención rutina) + Íntimo + Piel Sensible",budget:"15% del budget total",copy:"Tu rutina íntima completa · Sensibilidad + Frescura · Cuidado diario Lomecan"}
+];
+
+const LOMECAN_DATA = {
+  keywords: LOMECAN_KEYWORDS, prompts: LOMECAN_PROMPTS, adsPlan: LOMECAN_ADS_PLAN,
+  roiData: LOMECAN_ROI_DATA, budgetData: LOMECAN_BUDGET_DATA, phases: LOMECAN_PHASES,
+  channelBudget: [{canal:"Amazon DSP/SP",pct:30,color:"#F5A623"},{canal:"Google Search",pct:28,color:"#4285F4"},{canal:"Meta Ads",pct:24,color:"#1877F2"},{canal:"TikTok",pct:8,color:"#000000"},{canal:"YouTube",pct:7,color:"#FF0000"},{canal:"Display/Prog.",pct:3,color:"#34A853"}]
+};
+
+const BRAND_DATA_MAP = { 'SilkaMedic': SILKAMEDIC_DATA, 'Lomecan': LOMECAN_DATA };
+
+function switchBrandData(brandName) {
+  const bdata = BRAND_DATA_MAP[brandName];
+  if (!bdata) return;
+  KEYWORDS = bdata.keywords;
+  PROMPTS = bdata.prompts;
+  ADS_PLAN = bdata.adsPlan;
+  ROI_DATA = bdata.roiData;
+  BUDGET_DATA = bdata.budgetData;
+  CHANNEL_BUDGET = bdata.channelBudget;
+  PHASES = bdata.phases;
+  renderKW(); renderPrompts(); renderWeek(); renderROI(); renderPhases(); renderDonut(); recalcBudget();
+}
+
+// ══════════════════════════════════════════
 // BUDGET CALCULATOR
 // ══════════════════════════════════════════
 let currentBudget = 0;
 let currentCurrency = 'MXN';
 
-const CHANNEL_BUDGET = [
+let CHANNEL_BUDGET = [
   {canal:"Google Search", pct:30, color:"#4285F4"},
   {canal:"Amazon DSP/SP", pct:28, color:"#F5A623"},
   {canal:"Meta Ads",      pct:22, color:"#1877F2"},
@@ -1671,6 +1849,18 @@ const BRAND_PRESETS = {
     occasions: "Síntoma activo, Post-gym, Post-alberca, Prevención diaria, Rutina nocturna",
     tone: "empatico", market: "México"
   },
+  lomecan: {
+    name: "Lomecan", cat: "Antifúngico ginecológico — infecciones cervicovaginales por hongos",
+    color1: "#00B5C8", color2: "#8B2FC9",
+    pain: "Infección vaginal por hongos con ardor, comezón, flujo anormal, irritación y mal olor; se agrava durante menstruación, post-relación íntima, post-depilación y gym.",
+    products: "Lomecan UNO (Fluconazol 150mg · 1 sola toma)\nLomecan Crema (Clotrimazol 2% · 3 días)\nLomecan Esos Días (higiene íntima menstruación)\nLomecan Íntimo (fórmula libre de químicos)\nLomecan Piel Sensible (fórmula suave)",
+    claim: "Alivia ardor y comezón desde el primer día · 1 sola toma",
+    ingredient: "Fluconazol 150mg + Clotrimazol 2%",
+    competitors: "Canesten V, Diflucan, Monistat",
+    target: "Mujeres 16-35 | NSE C | Infección vaginal activa últimos 12 meses",
+    occasions: "Infección activa, Menstruación, Post-relación íntima, Post-depilación, Gym/sudoración, Post-antibiótico",
+    tone: "empatico", market: "México"
+  },
   tukol: {
     name: "Tukol", cat: "Farmacéutico OTC - Tos y Expectorante",
     color1: "#1A237E", color2: "#FF6F00",
@@ -1688,10 +1878,15 @@ const BRAND_PRESETS = {
 function loadBrandPreset(key, btn) {
   const preset = BRAND_PRESETS[key];
   if (!preset) return;
-  document.querySelectorAll('.brand-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.brand-pill').forEach(p => {
+    p.classList.remove('active');
+    p.style.background = 'transparent';
+  });
   btn.classList.add('active');
-  // Update header logo area
+  btn.style.background = preset.color1 || 'var(--gold)';
+  btn.style.color = '#fff';
   document.querySelector('.logo-text h1').textContent = preset.name + ' · Performance Hub';
+  switchBrandData(preset.name);
 }
 
 // ══════════════════════════════════════════
