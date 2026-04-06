@@ -36,6 +36,28 @@
   .header-badges { display: flex; gap: 10px; }
   .badge { background: rgba(245,197,24,0.2); border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 
+  /* ── KEY MESSAGES ── */
+  .km-filter {
+    padding:6px 14px;border:1.5px solid #ddd;background:white;border-radius:20px;
+    font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;color:#666;
+  }
+  .km-filter:hover { border-color:var(--purple-med);color:var(--purple-med); }
+  .km-filter.active { background:var(--purple-dark);border-color:var(--purple-dark);color:white; }
+  .km-card {
+    background:white;border-radius:14px;padding:18px 20px;box-shadow:0 2px 12px rgba(59,15,110,0.08);
+    border-left:4px solid #ddd;transition:transform 0.15s,box-shadow 0.15s;
+  }
+  .km-card:hover { transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,15,110,0.14); }
+  .km-card-header { display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap; }
+  .km-badge { padding:3px 10px;border-radius:12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px; }
+  .km-text { font-size:14px;font-weight:600;color:var(--dark-text);line-height:1.5;margin-bottom:12px; }
+  .km-meta { font-size:11px;color:#888;margin-bottom:10px; }
+  .km-copy-btn {
+    padding:5px 14px;background:var(--lavender);border:none;border-radius:8px;
+    font-size:11px;font-weight:700;color:var(--purple-dark);cursor:pointer;transition:all 0.2s;
+  }
+  .km-copy-btn:hover { background:var(--purple-dark);color:white; }
+
   /* ── TABS ── */
   .tabs-bar {
     background: white; border-bottom: 2px solid var(--lavender); display: flex; overflow-x: auto;
@@ -304,6 +326,7 @@
 <!-- TABS -->
 <nav class="tabs-bar">
   <button class="tab-btn active" onclick="showTab('overview')"><span class="tab-icon">📊</span>Overview</button>
+  <button class="tab-btn" onclick="showTab('keymessages')"><span class="tab-icon">💬</span>Key Messages</button>
   <button class="tab-btn" onclick="showTab('keywords')"><span class="tab-icon">🔑</span>Keywords Maestro</button>
   <button class="tab-btn" onclick="showTab('prompts')"><span class="tab-icon">🎨</span>Image Prompts IA</button>
   <button class="tab-btn" onclick="showTab('weekly')"><span class="tab-icon">📅</span>Plan ADS &amp; DSP Semanal</button>
@@ -399,6 +422,36 @@
       <div style="font-size:11px;color:#888;">Rol: RETENCIÓN — Cross-sell + LTV · Keywords: 6 activas</div>
     </div>
   </div>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- TAB: KEY MESSAGES -->
+<!-- ══════════════════════════════════ -->
+<div id="tab-keymessages" class="tab-content">
+  <div class="section-title">
+    <h2 id="kmBrandTitle">Key Messages</h2>
+    <span class="subtitle" id="kmBrandSubtitle">Mensajes listos para imágenes y campañas digitales · Copy-paste ready</span>
+  </div>
+  <!-- Hero Message -->
+  <div id="kmHeroCard" style="background:linear-gradient(135deg,var(--purple-dark),var(--purple-med));border-radius:18px;padding:28px 32px;margin-bottom:24px;color:white;position:relative;overflow:hidden;">
+    <div style="position:absolute;right:-20px;top:-20px;width:120px;height:120px;background:rgba(245,197,24,0.12);border-radius:50%;"></div>
+    <div style="font-size:11px;font-weight:800;letter-spacing:2px;opacity:0.7;margin-bottom:8px;text-transform:uppercase;">MENSAJE HERO — CLAIM PRINCIPAL</div>
+    <div id="kmHeroHeadline" style="font-size:26px;font-weight:900;line-height:1.2;margin-bottom:8px;">—</div>
+    <div id="kmHeroSubhead" style="font-size:14px;opacity:0.85;margin-bottom:12px;">—</div>
+    <div id="kmHeroTagline" style="display:inline-block;background:var(--gold);color:var(--purple-dark);padding:4px 14px;border-radius:20px;font-size:12px;font-weight:800;">—</div>
+  </div>
+  <!-- Filters -->
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center;">
+    <span style="font-size:12px;font-weight:700;color:#888;margin-right:4px;">FILTRAR:</span>
+    <button onclick="filterKM('all')" class="km-filter active" id="kmf-all">Todos</button>
+    <button onclick="filterKM('producto')" class="km-filter" id="kmf-producto">Por Producto</button>
+    <button onclick="filterKM('ocasion')" class="km-filter" id="kmf-ocasion">Por Ocasión</button>
+    <button onclick="filterKM('canal')" class="km-filter" id="kmf-canal">Por Canal</button>
+    <button onclick="filterKM('claim')" class="km-filter" id="kmf-claim">Claims Clave</button>
+    <button onclick="filterKM('copy')" class="km-filter" id="kmf-copy">Copy Listo</button>
+  </div>
+  <!-- Messages Grid -->
+  <div id="kmGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;"></div>
 </div>
 
 <!-- ══════════════════════════════════ -->
@@ -1099,7 +1152,8 @@ let PHASES = [
 const SILKAMEDIC_DATA = {
   keywords: KEYWORDS, prompts: PROMPTS, adsPlan: ADS_PLAN,
   roiData: ROI_DATA, budgetData: BUDGET_DATA, phases: PHASES,
-  channelBudget: [{canal:"Google Search",pct:30,color:"#4285F4"},{canal:"Amazon DSP/SP",pct:28,color:"#F5A623"},{canal:"Meta Ads",pct:22,color:"#1877F2"},{canal:"TikTok",pct:10,color:"#000000"},{canal:"YouTube",pct:7,color:"#FF0000"},{canal:"Display/Prog.",pct:3,color:"#34A853"}]
+  channelBudget: [{canal:"Google Search",pct:30,color:"#4285F4"},{canal:"Amazon DSP/SP",pct:28,color:"#F5A623"},{canal:"Meta Ads",pct:22,color:"#1877F2"},{canal:"TikTok",pct:10,color:"#000000"},{canal:"YouTube",pct:7,color:"#FF0000"},{canal:"Display/Prog.",pct:3,color:"#34A853"}],
+  keyMessages: null
 };
 
 // ══════════════════════════════════════════
@@ -1252,8 +1306,147 @@ const LOMECAN_PHASES = [
 const LOMECAN_DATA = {
   keywords: LOMECAN_KEYWORDS, prompts: LOMECAN_PROMPTS, adsPlan: LOMECAN_ADS_PLAN,
   roiData: LOMECAN_ROI_DATA, budgetData: LOMECAN_BUDGET_DATA, phases: LOMECAN_PHASES,
-  channelBudget: [{canal:"Amazon DSP/SP",pct:30,color:"#F5A623"},{canal:"Google Search",pct:28,color:"#4285F4"},{canal:"Meta Ads",pct:24,color:"#1877F2"},{canal:"TikTok",pct:8,color:"#000000"},{canal:"YouTube",pct:7,color:"#FF0000"},{canal:"Display/Prog.",pct:3,color:"#34A853"}]
+  channelBudget: [{canal:"Amazon DSP/SP",pct:30,color:"#F5A623"},{canal:"Google Search",pct:28,color:"#4285F4"},{canal:"Meta Ads",pct:24,color:"#1877F2"},{canal:"TikTok",pct:8,color:"#000000"},{canal:"YouTube",pct:7,color:"#FF0000"},{canal:"Display/Prog.",pct:3,color:"#34A853"}],
+  keyMessages: 'lomecan'
 };
+
+// ══════════════════════════════════════════
+// KEY MESSAGES DATA
+// ══════════════════════════════════════════
+const SILKAMEDIC_KEY_MESSAGES = {
+  hero: {
+    headline: "Rapidísísísísimo",
+    subhead: "Cura el Pie de Atleta en 7 días · 1 aplicación al día · Terbinafina 1%",
+    tagline: "#1 en Cuidado del Pie en México · 400% más rápido"
+  },
+  messages: [
+    // POR PRODUCTO — GEL
+    {cat:"producto",producto:"GEL",canal:"Todos",tipo:"Hero",uso:"Headline / titular principal",texto:"Cura el Pie de Atleta en 7 días. Una aplicación al día. SilkaMedic Gel.",color:"#3B0F6E"},
+    {cat:"producto",producto:"GEL",canal:"Amazon",tipo:"Bullet point",uso:"Descripción Amazon / bullet point",texto:"✓ Terbinafina 1% — la misma fórmula que el #1 mundial · ✓ 7 días de tratamiento · ✓ 1 sola aplicación al día · ✓ Resultado clínicamente comprobado",color:"#3B0F6E"},
+    {cat:"producto",producto:"GEL",canal:"Meta / TikTok",tipo:"Hook",uso:"Primer segundo del video / copy de apertura",texto:"¿Llevas semanas con ese hongo y no se va? SilkaMedic Gel actúa 400% más rápido. 7 días. Punto.",color:"#3B0F6E"},
+    {cat:"producto",producto:"GEL",canal:"Google Search",tipo:"Ad copy",uso:"Titular anuncio Google",texto:"Cura Pie de Atleta en 7 Días | Terbinafina 1% | Sin receta | Envío gratis desde $149 MXN",color:"#3B0F6E"},
+    // POR PRODUCTO — SPRAY
+    {cat:"producto",producto:"SPRAY",canal:"Todos",tipo:"Hero",uso:"Headline / titular principal",texto:"Sin tocar. Sin residuo. Máxima higiene en segundos. SilkaMedic Spray.",color:"#1E3A5F"},
+    {cat:"producto",producto:"SPRAY",canal:"Meta / TikTok",tipo:"Hook",uso:"Apertura video reel",texto:"Después del gym tus pies están expuestos. Un spray. Sin tocar. Sin contacto. SilkaMedic.",color:"#1E3A5F"},
+    {cat:"producto",producto:"SPRAY",canal:"Amazon",tipo:"Bullet point",uso:"Descripción Amazon",texto:"✓ Aplicación sin contacto directo · ✓ Seca en segundos · ✓ Ideal para gym, alberca y vestuarios · ✓ Formato de viaje",color:"#1E3A5F"},
+    {cat:"producto",producto:"SPRAY",canal:"Google Search",tipo:"Ad copy",uso:"Titular anuncio Google",texto:"Antifúngico Spray Sin Contacto | Post-Gym | Seca en Segundos | Sin Residuo | SilkaMedic",color:"#1E3A5F"},
+    // POR PRODUCTO — TALCO
+    {cat:"producto",producto:"TALCO",canal:"Todos",tipo:"Hero",uso:"Headline / titular principal",texto:"48 horas de protección total. Antes de que llegue el hongo. Talco Defensa.",color:"#4A235A"},
+    {cat:"producto",producto:"TALCO",canal:"Meta / TikTok",tipo:"Copy",uso:"Caption / descripción",texto:"No esperes a que regrese. Talco Defensa te protege 48 horas continuas. Aplícalo cada noche y olvídate.",color:"#4A235A"},
+    {cat:"producto",producto:"TALCO",canal:"Amazon",tipo:"Cross-sell",uso:"Cross-sell Gel + Talco",texto:"El combo ganador: Gel cura en 7 días · Talco Defensa evita que regrese. Protección completa sin recaídas.",color:"#4A235A"},
+    // POR OCASIÓN
+    {cat:"ocasion",producto:"GEL",canal:"Todos",tipo:"Síntoma activo",uso:"Awareness — síntoma activo",texto:"¿Te pica entre los dedos? ¿Piel agrietada, seca o con mal olor en los pies? Es pie de atleta. SilkaMedic Gel lo elimina en 7 días.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"SPRAY",canal:"Meta / TikTok",tipo:"Post-gym",uso:"Audiencia fitness / gym",texto:"Locker room, vestuario, piscina — el hongo acecha. SilkaMedic Spray: protección en un segundo. Sin tocar.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"TALCO",canal:"Meta",tipo:"Prevención diaria",uso:"Rutina nocturna / prevención",texto:"Pie de atleta cero. Rutina de 10 segundos: Talco Defensa antes de dormir. 48 horas de escudo antifúngico.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"GEL + SPRAY",canal:"Meta / YouTube",tipo:"Verano / alberca",uso:"Estacional verano — abril a agosto",texto:"Verano + alberca + sandalias = temporada alta del hongo. Protégete desde hoy con SilkaMedic.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"TALCO",canal:"Meta",tipo:"Post-curación",uso:"Cross-sell post-tratamiento",texto:"Ya curaste el hongo con el Gel. Ahora evita que regrese. Talco Defensa = 48h de barrera antifúngica.",color:"#E74C3C"},
+    // POR CANAL
+    {cat:"canal",producto:"Todos",canal:"Amazon",tipo:"PDP headline",uso:"Título producto Amazon / SEO",texto:"SilkaMedic Gel Antifúngico Pie de Atleta | Terbinafina 1% | Cura en 7 Días | 1 Aplicación al Día | 15g",color:"#FF6900"},
+    {cat:"canal",producto:"Todos",canal:"Amazon",tipo:"A+ content",uso:"Sección A+ / Brand Story",texto:"20 años cuidando los pies de México. SilkaMedic es la fórmula de Terbinafina 1% que actúa 400% más rápido. Genomma Lab.",color:"#FF6900"},
+    {cat:"canal",producto:"GEL",canal:"TikTok",tipo:"UGC / Testimonial",uso:"Script UGC / influencer",texto:"'Tenía pie de atleta desde hace meses. Probé SilkaMedic Gel y en 7 días desapareció. Una aplicación al día. Literalmente Rapidísísísísimo.'",color:"#000000"},
+    {cat:"canal",producto:"SPRAY",canal:"TikTok",tipo:"POV Hook",uso:"Hook primeros 2 segundos",texto:"POV: terminaste el crossfit y el vestuario es un riesgo biológico 😅 SilkaMedic Spray — un segundo y te proteges.",color:"#000000"},
+    {cat:"canal",producto:"GEL",canal:"Meta",tipo:"Carrusel slide 1",uso:"Primera imagen del carrusel",texto:"¿El hongo en el pie que no se va? Spoiler: sí tiene solución. 7 días. 1 aplicación. SilkaMedic.",color:"#1877F2"},
+    {cat:"canal",producto:"Todos",canal:"Google Display",tipo:"Banner",uso:"Texto banner display",texto:"Pie de Atleta → SilkaMedic Gel · 7 días · Terbinafina 1% · Desde $149 MXN · Envío gratis",color:"#4285F4"},
+    // CLAIMS CLAVE
+    {cat:"claim",producto:"GEL",canal:"Todos",tipo:"Claim velocidad",uso:"Diferenciador vs competencia",texto:"400% más rápido que los tratamientos convencionales. Misma Terbinafina 1%, tiempo de curación superior.",color:"#27AE60"},
+    {cat:"claim",producto:"GEL",canal:"Todos",tipo:"Claim simplicidad",uso:"Barrera de uso baja",texto:"1 aplicación al día. Nada más. Sin rituales complicados. Sin doble dosis. Sin receta.",color:"#27AE60"},
+    {cat:"claim",producto:"TALCO",canal:"Todos",tipo:"Claim duración",uso:"Diferenciador exclusivo Talco",texto:"48 horas de protección activa. Único antifúngico preventivo con protección continua por 2 días.",color:"#27AE60"},
+    {cat:"claim",producto:"SPRAY",canal:"Todos",tipo:"Claim higiene",uso:"Diferenciador exclusivo Spray",texto:"El único antifúngico de spray sin contacto directo. Higiénico. Rápido. Perfecto para deportistas.",color:"#27AE60"},
+    // COPY LISTO
+    {cat:"copy",producto:"GEL",canal:"Instagram / Facebook",tipo:"Post orgánico",uso:"Caption post orgánico listo para publicar",texto:"¿Sabías que el pie de atleta puede volver si no lo tratas bien? Con SilkaMedic Gel: 7 días, 1 aplicación al día y Terbinafina 1% hacen el trabajo. Rápido de verdad. 💊 #SilkaMedic #PieDeAtleta #Rapidísimo",color:"#8E44AD"},
+    {cat:"copy",producto:"SPRAY",canal:"Instagram / Facebook",tipo:"Post orgánico",uso:"Caption post orgánico listo para publicar",texto:"Gym ✓ Alberca ✓ Vestuario ✓ — con SilkaMedic Spray siempre estás protegido. Sin tocar, sin residuo, en segundos. 💨 #GymLife #SilkaMedic #AntiHongo",color:"#8E44AD"},
+    {cat:"copy",producto:"TALCO",canal:"Instagram / Facebook",tipo:"Post orgánico",uso:"Caption post orgánico listo para publicar",texto:"La mejor defensa contra el pie de atleta: no dejarlo llegar. Talco Defensa Extrasecante · 48h de protección total · Úsalo cada noche. 🛡️ #SilkaMedic #Prevención #PiesDeSalud",color:"#8E44AD"}
+  ]
+};
+
+const LOMECAN_KEY_MESSAGES = {
+  hero: {
+    headline: "Alivia ardor y comezón desde el primer día",
+    subhead: "1 sola cápsula · Cualquier hora del día · Fluconazol 150mg · Tratamiento completo",
+    tagline: "Tu infección vaginal tiene los días contados · Lomecan"
+  },
+  messages: [
+    // POR PRODUCTO — UNO
+    {cat:"producto",producto:"UNO",canal:"Todos",tipo:"Hero",uso:"Headline / titular principal",texto:"Una cápsula. Una toma. Cualquier hora del día. Alivio desde el primer día. Lomecan UNO.",color:"#00B5C8"},
+    {cat:"producto",producto:"UNO",canal:"Amazon",tipo:"Bullet point",uso:"Descripción Amazon / bullet point",texto:"✓ Fluconazol 150mg — tratamiento completo en 1 toma · ✓ Alivia ardor y comezón desde el día 1 · ✓ Sin receta médica · ✓ Cualquier hora del día",color:"#00B5C8"},
+    {cat:"producto",producto:"UNO",canal:"Meta / TikTok",tipo:"Hook",uso:"Primer segundo del video / copy apertura",texto:"¿Llevas días con ardor, comezón y flujo anormal? Una sola cápsula y desde mañana ya no lo sientes. Lomecan UNO.",color:"#00B5C8"},
+    {cat:"producto",producto:"UNO",canal:"Google Search",tipo:"Ad copy",uso:"Titular anuncio Google",texto:"Alivia Candidiasis en 1 Sola Toma | Fluconazol 150mg | Sin Receta | Envío Gratis desde $189 MXN",color:"#00B5C8"},
+    // POR PRODUCTO — CREMA
+    {cat:"producto",producto:"Crema",canal:"Todos",tipo:"Hero",uso:"Headline / titular principal",texto:"3 días. 4 síntomas aliviados. Ardor, comezón, flujo, irritación. Lomecan Crema Clotrimazol 2%.",color:"#8B2FC9"},
+    {cat:"producto",producto:"Crema",canal:"Amazon",tipo:"Bullet point",uso:"Descripción Amazon / bullet points",texto:"✓ Clotrimazol 2% — alivia los 4 síntomas · ✓ 1 aplicación al día por 3 días · ✓ Incluye aplicador · ✓ Tratamiento cervicovaginal completo",color:"#8B2FC9"},
+    {cat:"producto",producto:"Crema",canal:"Meta",tipo:"Copy",uso:"Caption / descripción ad",texto:"Ardor, comezón, flujo anormal, irritación — los 4 síntomas de la infección vaginal. Lomecan Crema los alivia en 3 días.",color:"#8B2FC9"},
+    // POR PRODUCTO — ESOS DÍAS
+    {cat:"producto",producto:"Esos Días",canal:"Meta / TikTok",tipo:"Hero",uso:"Headline para contenido de periodo",texto:"Para esos días. Con la higiene íntima que mereces. Lomecan Esos Días.",color:"#5B2C8A"},
+    {cat:"producto",producto:"Esos Días",canal:"Meta",tipo:"Copy",uso:"Caption periodo / menstruación",texto:"Durante el periodo tu zona íntima necesita un cuidado especial. Lomecan Esos Días: fórmula específica para los días de menstruación.",color:"#5B2C8A"},
+    // POR OCASIÓN
+    {cat:"ocasion",producto:"UNO",canal:"Todos",tipo:"Síntoma activo",uso:"Awareness — síntoma activo urgente",texto:"Ardor, comezón, flujo anormal, mal olor. Tu cuerpo te está diciendo algo. Lomecan UNO: una toma y empieza el alivio desde el día 1.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"UNO",canal:"Meta",tipo:"Post-antibiótico",uso:"Ocasión post-antibiótico",texto:"Los antibióticos pueden alterar tu flora vaginal y generar hongos. Si ya lo notas: Lomecan UNO. Una toma. Sin drama.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"Esos Días",canal:"Meta / TikTok",tipo:"Menstruación",uso:"Contenido periodo menstrual",texto:"El periodo es un momento donde la higiene íntima es crítica. Lomecan Esos Días está formulado especialmente para esos días.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"UNO",canal:"Meta",tipo:"Post-relación íntima",uso:"Ocasión intimidad",texto:"Después de una relación íntima, el pH puede desequilibrarse y abrir la puerta a los hongos. Lomecan UNO cuida tu salud vaginal.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"UNO",canal:"Meta / TikTok",tipo:"Post-depilación",uso:"Post rasurado / depilación",texto:"Post-depilación la piel es más vulnerable a infecciones. Cuida tu zona íntima con Lomecan. Sensibilidad y protección.",color:"#E74C3C"},
+    {cat:"ocasion",producto:"UNO",canal:"Meta / TikTok",tipo:"Gym / sudoración",uso:"Audiencia activa / deportista",texto:"Calor + humedad + actividad física = condiciones ideales para el hongo vaginal. Lomecan. Cuando lo necesitas, funciona.",color:"#E74C3C"},
+    // POR CANAL
+    {cat:"canal",producto:"Todos",canal:"Amazon",tipo:"PDP headline",uso:"Título producto Amazon / SEO",texto:"Lomecan UNO Cápsula Antifúngica | Fluconazol 150mg | Infección Vaginal | 1 Sola Toma | Alivia Ardor Día 1",color:"#FF6900"},
+    {cat:"canal",producto:"Todos",canal:"Amazon",tipo:"A+ content",uso:"Sección A+ / Brand Story",texto:"Genomma Lab — más de 20 años cuidando la salud de la mujer en México. Lomecan: la solución antifúngica ginecológica de confianza.",color:"#FF6900"},
+    {cat:"canal",producto:"UNO",canal:"TikTok",tipo:"UGC / Testimonial",uso:"Script UGC / contenido auténtico",texto:"'Llevaba días con esa incomodidad horrible. Tomé Lomecan UNO y al día siguiente ya no sentía nada. Literalmente una sola cápsula. ¡En serio!'",color:"#000000"},
+    {cat:"canal",producto:"UNO",canal:"TikTok",tipo:"POV Hook",uso:"Hook primeros 2 segundos",texto:"POV: llevas 3 días con esa incomodidad y ya no puedes más 😖 Hay una sola cápsula que lo resuelve desde mañana. Te cuento.",color:"#000000"},
+    {cat:"canal",producto:"Crema",canal:"Meta",tipo:"Carrusel slide 1",uso:"Primera imagen del carrusel",texto:"¿Los 4 síntomas juntos? Ardor. Comezón. Flujo. Irritación. Lomecan Crema los ataca todos. 3 días.",color:"#1877F2"},
+    {cat:"canal",producto:"UNO",canal:"Google Display",tipo:"Banner",uso:"Texto banner display",texto:"Infección vaginal → Lomecan UNO · 1 Toma · Fluconazol 150mg · Alivia el día 1 · Desde $189 MXN",color:"#4285F4"},
+    // CLAIMS CLAVE
+    {cat:"claim",producto:"UNO",canal:"Todos",tipo:"Claim velocidad",uso:"Diferenciador vs competencia",texto:"Alivia ardor y comezón desde el primer día. No en 3 días. No en una semana. Desde el día 1.",color:"#27AE60"},
+    {cat:"claim",producto:"UNO",canal:"Todos",tipo:"Claim simplicidad",uso:"Diferenciador de formato",texto:"1 sola cápsula. Cualquier hora del día. Sin aplicadores. Sin días de tratamiento. Sin complejidad.",color:"#27AE60"},
+    {cat:"claim",producto:"UNO",canal:"Todos",tipo:"Claim acceso",uso:"Barrera de acceso",texto:"Sin receta médica. Disponible en Amazon y farmacias. Discreción garantizada. Llega a tu puerta.",color:"#27AE60"},
+    {cat:"claim",producto:"Crema",canal:"Todos",tipo:"Claim cobertura",uso:"Diferenciador Crema",texto:"Alivia los 4 síntomas: ardor, comezón, flujo anormal e irritación. Clotrimazol 2% probado clínicamente.",color:"#27AE60"},
+    // COPY LISTO
+    {cat:"copy",producto:"UNO",canal:"Instagram / Facebook",tipo:"Post orgánico",uso:"Caption post orgánico listo para publicar",texto:"Una cápsula. Un día. Alivio real desde el primer día. Así de simple es Lomecan UNO 💊 Para las que ya no quieren esperar más. #Lomecan #SaludFemenina #InfecciónVaginal",color:"#8E44AD"},
+    {cat:"copy",producto:"Crema",canal:"Instagram / Facebook",tipo:"Post orgánico",uso:"Caption post orgánico listo para publicar",texto:"Ardor ✓ Comezón ✓ Flujo anormal ✓ Irritación ✓ — Lomecan Crema los alivia todos en 3 días con Clotrimazol 2% 🌸 #Lomecan #SaludVaginal #CuidadoÍntimo",color:"#8E44AD"},
+    {cat:"copy",producto:"Esos Días",canal:"Instagram / Facebook",tipo:"Post orgánico",uso:"Caption post orgánico listo para publicar",texto:"Para esos días en los que tu zona íntima necesita más cuidado. Lomecan Esos Días: higiene íntima diseñada para el periodo 🌺 #LomecanEsosDías #HigieneÍntima #Periodo",color:"#8E44AD"}
+  ]
+};
+
+let KEY_MESSAGES = SILKAMEDIC_KEY_MESSAGES;
+
+// ── KM RENDER ──
+function renderKM() {
+  const km = KEY_MESSAGES;
+  // Hero card colors
+  const hero = km.hero;
+  document.getElementById('kmHeroHeadline').textContent = hero.headline;
+  document.getElementById('kmHeroSubhead').textContent = hero.subhead;
+  document.getElementById('kmHeroTagline').textContent = hero.tagline;
+  filterKM('all');
+}
+
+function filterKM(cat) {
+  document.querySelectorAll('.km-filter').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('kmf-' + cat);
+  if (btn) btn.classList.add('active');
+  const msgs = cat === 'all' ? KEY_MESSAGES.messages : KEY_MESSAGES.messages.filter(m => m.cat === cat);
+  const catLabels = {producto:'Producto',ocasion:'Ocasión',canal:'Canal',claim:'Claim',copy:'Copy'};
+  const catColors = {producto:'#3B0F6E',ocasion:'#E74C3C',canal:'#2980B9',claim:'#27AE60',copy:'#8E44AD'};
+  document.getElementById('kmGrid').innerHTML = msgs.map((m,i) => `
+    <div class="km-card" style="border-left-color:${m.color}">
+      <div class="km-card-header">
+        <span class="km-badge" style="background:${catColors[m.cat]||'#888'}20;color:${catColors[m.cat]||'#888'}">${catLabels[m.cat]||m.cat}</span>
+        <span class="km-badge" style="background:${m.color}18;color:${m.color}">${m.producto}</span>
+        <span class="km-badge" style="background:#f0f0f0;color:#666">${m.canal}</span>
+        <span class="km-badge" style="background:#fff8e1;color:#b8860b">${m.tipo}</span>
+      </div>
+      <div class="km-text">"${m.texto}"</div>
+      <div class="km-meta">Uso recomendado: ${m.uso}</div>
+      <button class="km-copy-btn" onclick="copyKM(${i})">Copiar mensaje</button>
+    </div>
+  `).join('');
+}
+
+function copyKM(idx) {
+  const cat = document.querySelector('.km-filter.active').id.replace('kmf-','');
+  const msgs = cat === 'all' ? KEY_MESSAGES.messages : KEY_MESSAGES.messages.filter(m => m.cat === cat);
+  navigator.clipboard.writeText(msgs[idx].texto).then(() => {
+    const btns = document.querySelectorAll('#kmGrid .km-copy-btn');
+    if (btns[idx]) { btns[idx].textContent = '✓ Copiado'; setTimeout(() => { btns[idx].textContent = 'Copiar mensaje'; }, 1800); }
+  });
+}
 
 const BRAND_DATA_MAP = { 'SilkaMedic': SILKAMEDIC_DATA, 'Lomecan': LOMECAN_DATA };
 
@@ -1267,7 +1460,8 @@ function switchBrandData(brandName) {
   BUDGET_DATA = bdata.budgetData;
   CHANNEL_BUDGET = bdata.channelBudget;
   PHASES = bdata.phases;
-  renderKW(); renderPrompts(); renderWeek(); renderROI(); renderPhases(); renderDonut(); recalcBudget();
+  KEY_MESSAGES = bdata.keyMessages === 'lomecan' ? LOMECAN_KEY_MESSAGES : SILKAMEDIC_KEY_MESSAGES;
+  renderKW(); renderPrompts(); renderWeek(); renderROI(); renderPhases(); renderDonut(); recalcBudget(); renderKM();
 }
 
 // ══════════════════════════════════════════
@@ -2253,6 +2447,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDonut();
   recalcAmazon();
   recalcMeli();
+  renderKM();
 });
 </script>
 </body>
